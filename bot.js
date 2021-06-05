@@ -4,6 +4,7 @@ const logger = require('winston');
 const price = require('crypto-price')
 const ytdl = require('ytdl-core');
 const prefix = "!";
+const chewbacca = require("./audio/ChewbaccaSound.mp3")
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
@@ -30,7 +31,6 @@ client.once("disconnect", () => {
 client.on("message", async message => {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
-
   const serverQueue = queue.get(message.guild.id);
 
   if (message.content.startsWith(`${prefix}play`)) {
@@ -42,10 +42,32 @@ client.on("message", async message => {
   } else if (message.content.startsWith(`${prefix}stop`)) {
     stop(message, serverQueue);
     return;
+  } else if(message.content.startsWith(`${prefix}chew`)){
+    sound(message.content.split("!")[1], message)
   } else {
     message.channel.send("You need to enter a valid command!");
   }
 });
+
+
+
+async function sound(sound, message) {
+  const voiceChannel = message.member.voice.channel;
+  if(!voiceChannel) return;
+
+  try {
+    var connection = await voiceChannel.join();
+    const dispatcher = serverQueue.connection
+    .play(chewbacca)
+    .on("error", error => console.error(error));
+    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+    serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+  } catch (err) {
+    console.log(err);
+    queue.delete(message.guild.id);
+    return message.channel.send(err);
+  }
+}
 
 async function execute(message, serverQueue) {
   const args = message.content.split(" ");
