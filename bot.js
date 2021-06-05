@@ -53,14 +53,12 @@ client.on("message", async message => {
 async function sound(sound, message) {
   const voiceChannel = message.member.voice.channel;
   if(!voiceChannel) return;
-
   try {
     var connection = await voiceChannel.join();
     const dispatcher = serverQueue.connection
     .play("./audio/ChewbaccaSound.mp3")
     .on("error", error => console.error(error));
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    serverQueue.textChannel.send(`Start playing: **${song.title}**`);
   } catch (err) {
     console.log(err);
     queue.delete(message.guild.id);
