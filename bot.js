@@ -3,12 +3,22 @@ const Discord = require('discord.js');
 const logger = require('winston');
 const price = require('crypto-price')
 const ytdl = require('ytdl-core');
+const ffmpeg = require('ffmpeg')
 const prefix = "!";
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
     colorize: true
 });
+
+const sounds = {
+  "chew": "./audio/ChewbaccaSound.mp3",
+  "boner": "./audio/I_got_a_boner.mp3",
+  "bilo": "./audio/bilo.mp3",
+  "ezekial": "./audio/pulp_bible.mp3",
+  "precious": "./audio/precious.mp3",
+  "shit": "./audio/Winds of Shit.mp3"
+}
 
 logger.level = 'debug';
 const client = new Discord.Client();
@@ -48,20 +58,21 @@ client.on("message", async message => {
   }
 });
 
-
-
 async function sound(sound, message) {
   const voiceChannel = message.member.voice.channel;
   if(!voiceChannel) return;
   try {
     var connection = await voiceChannel.join();
     const dispatcher = connection
-    .play("./audio/ChewbaccaSound.mp3")
-    .on("error", error => console.error(error));
+    .play(sounds[sound])
+    .on("error", error => console.error(error))
+    .on("finish", () => {
+      dispatcher.destroy();
+      connection.disconnect();
+    });
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
   } catch (err) {
     console.log(err);
-    queue.delete(message.guild.id);
     return message.channel.send(err);
   }
 }
