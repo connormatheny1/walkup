@@ -55,7 +55,7 @@ async function sound(sound, message) {
   if(!voiceChannel) return;
   try {
     var connection = await voiceChannel.join();
-    const dispatcher = serverQueue.connection
+    const dispatcher = connection
     .play("./audio/ChewbaccaSound.mp3")
     .on("error", error => console.error(error));
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
