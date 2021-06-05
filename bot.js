@@ -53,9 +53,13 @@ client.on("message", async message => {
     return;
   } else if(message.content.startsWith(`${prefix}chew`)){
     sound(message.content.split("!")[1], message)
-  } else if(sounds[message.content.split("!")[1]]){
-    sound(message.content.split("!"[1]), message);
-  } else { message.channel.send("You need to enter a valid command!"); }
+  } else {
+    const snd = message.content.split("!")[1] 
+    if(sounds[snd]){
+      sound(message.content.split("!")[1], message);
+    }
+    //message.channel.send("You need to enter a valid command!"); 
+  }
 });
 
 async function sound(sound, message) {
