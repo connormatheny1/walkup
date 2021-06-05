@@ -4,7 +4,6 @@ const logger = require('winston');
 const price = require('crypto-price')
 const ytdl = require('ytdl-core');
 const prefix = "!";
-const chewbacca = require("./audio/ChewbaccaSound.mp3")
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
