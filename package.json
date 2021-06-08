@@ -19,6 +19,7 @@
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.3.0",
     "nodemon": "^2.0.7",
+    "pg": "^8.6.0",
     "winston": "^3.3.3",
     "ytdl-core": "^4.8.2"
   }

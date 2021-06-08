@@ -1,24 +1,17 @@
 require('dotenv').config();
 const Discord = require('discord.js');
 const logger = require('winston');
-const price = require('crypto-price')
+const price = require('crypto-price');
 const ytdl = require('ytdl-core');
-const ffmpeg = require('ffmpeg')
+const ffmpeg = require('ffmpeg');
 const prefix = "!";
+const sounds = require("./sounds.json");
+const db = require("./db");
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
     colorize: true
 });
-
-const sounds = {
-  "chew": "./audio/ChewbaccaSound.mp3",
-  "boner": "./audio/I_got_a_boner.mp3",
-  "bilo": "./audio/bilo.mp3",
-  "ezekial": "./audio/pulp_bible.mp3",
-  "precious": "./audio/precious.mp3",
-  "shit": "./audio/Winds of Shit.mp3"
-}
 
 logger.level = 'debug';
 const client = new Discord.Client();
@@ -53,14 +46,21 @@ client.on("message", async message => {
     return;
   } else if(message.content.startsWith(`${prefix}chew`)){
     sound(message.content.split("!")[1], message)
+  } else if(message.content.startsWith(`${prefix}walkup`)){
+    walkup(message)
   } else {
     const snd = message.content.split("!")[1] 
     if(sounds[snd]){
       sound(message.content.split("!")[1], message);
     }
-    //message.channel.send("You need to enter a valid command!"); 
   }
 });
+
+async function walkup(message) {
+  console.log(message);
+  const result = await db.query("select * from users")
+  console.log(result)
+}
 
 async function sound(sound, message) {
   const voiceChannel = message.member.voice.channel;
